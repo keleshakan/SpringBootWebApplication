@@ -43,13 +43,15 @@ public class PersonResource {
         CompletableFuture<User> page1 = lookupService.findUser("PivotalSoftware");
         CompletableFuture<User> page2 = lookupService.findUser("CloudFoundry");
         CompletableFuture<User> page3 = lookupService.findUser("Spring-Projects");
+        CompletableFuture<User> page4 = lookupService.findUser("keleshakan");
 
-        CompletableFuture.allOf(page1,page2,page3).join();
+        CompletableFuture.allOf(page1,page2,page3,page4).join();
 
         List<User> userList = new ArrayList<>();
         userList.add(page1.get());
         userList.add(page2.get());
         userList.add(page3.get());
+        userList.add(page4.get());
 
         return userList;
     }
