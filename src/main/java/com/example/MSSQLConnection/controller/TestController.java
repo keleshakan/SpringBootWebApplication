@@ -1,6 +1,7 @@
 package com.example.MSSQLConnection.controller;
 
 import com.example.MSSQLConnection.concurrency.Worker;
+import com.example.MSSQLConnection.util.MemoryMapUtil;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,5 +32,12 @@ public class TestController {
 
 
         return Collections.singletonMap("message", "Test is completed!");
+    }
+
+    @GetMapping("/memoryMap")
+    public Map<String, Object> memoryMap() {
+        MemoryMapUtil.writeAndReadMemory();
+
+        return Collections.singletonMap("message", "Memory Map example is completed!");
     }
 }
