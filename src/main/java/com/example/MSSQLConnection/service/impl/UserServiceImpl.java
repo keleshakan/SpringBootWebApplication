@@ -6,11 +6,8 @@ import com.example.MSSQLConnection.persistence.RoleRepository;
 import com.example.MSSQLConnection.persistence.User;
 import com.example.MSSQLConnection.persistence.UserRepository;
 import com.example.MSSQLConnection.service.UserService;
-
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
