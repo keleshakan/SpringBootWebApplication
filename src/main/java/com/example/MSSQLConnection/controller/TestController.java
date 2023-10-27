@@ -5,10 +5,9 @@ import com.example.MSSQLConnection.util.MemoryMapUtil;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.stream.Stream;
 
@@ -39,5 +38,19 @@ public class TestController {
         MemoryMapUtil.writeAndReadMemory();
 
         return Collections.singletonMap("message", "Memory Map example is completed!");
+    }
+
+    @GetMapping("/getDateTime")
+    public Map<String, Object> getDateTime() {
+        LocalDate localDateNow = LocalDate.now();
+        LocalTime localTime = LocalTime.now();
+        LocalDate localDateTomorrow = LocalDate.now().plusDays(1);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("Today", localDateNow);
+        result.put("Now", localTime);
+        result.put("Tomorrow", localDateTomorrow);
+
+        return result;
     }
 }
