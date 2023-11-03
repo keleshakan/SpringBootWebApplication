@@ -4,6 +4,7 @@ import com.example.MSSQLConnection.concurrency.Worker;
 import com.example.MSSQLConnection.model.Greeting;
 import com.example.MSSQLConnection.util.MemoryMapUtil;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.reflect.Field;
@@ -69,10 +70,31 @@ public class TestController {
         return Collections.singletonMap("message", "Reflection method executed!");
     }
 
+    @GetMapping("/getRandoms/{mod}")
+    public Map<String, Integer> getRandoms(@PathVariable Integer mod) {
+        return generator(0, mod, 3, 1, 10);
+    }
+
     private static List<String> getFieldNames(Field[] fields) {
         List<String> fieldNames = new ArrayList<>();
         for (Field field : fields)
             fieldNames.add(field.getName());
         return fieldNames;
+    }
+
+    // Linear Congruential Generator
+    static Map<String, Integer> generator(int seed, int mod, int multiplier,int inc, int noOfRandomNum)
+    {
+        int[] randomNums = new int[noOfRandomNum];
+        Map<String, Integer> result = new HashMap<>();
+
+        randomNums[0] = seed;
+        result.put(String.valueOf(0), seed);
+
+        for (int i = 1; i < noOfRandomNum; i++) {
+            randomNums[i] = ((randomNums[i - 1] * multiplier) + inc) % mod;
+            result.put(String.valueOf(i), randomNums[i]);
+        }
+        return result;
     }
 }
