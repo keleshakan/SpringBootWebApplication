@@ -3,6 +3,7 @@ package com.example.MSSQLConnection.controller;
 import com.example.MSSQLConnection.concurrency.Worker;
 import com.example.MSSQLConnection.model.Greeting;
 import com.example.MSSQLConnection.util.MemoryMapUtil;
+import com.example.MSSQLConnection.util.TwilioUtil;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -73,6 +74,12 @@ public class TestController {
     @GetMapping("/getRandoms/{mod}")
     public Map<String, Integer> getRandoms(@PathVariable Integer mod) {
         return generator(0, mod, 3, 1, 10);
+    }
+
+    @GetMapping("/sendSMS")
+    public String sendSMS() {
+        TwilioUtil.sendSMS();
+        return "SMS sent to user";
     }
 
     private static List<String> getFieldNames(Field[] fields) {
