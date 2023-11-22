@@ -1,13 +1,23 @@
 package com.example.MSSQLConnection.controller;
 
 import com.example.MSSQLConnection.concurrency.Worker;
+import com.example.MSSQLConnection.model.Customer;
 import com.example.MSSQLConnection.model.Greeting;
 import com.example.MSSQLConnection.util.MemoryMapUtil;
 import com.example.MSSQLConnection.util.TwilioUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jooq.tools.json.JSONParser;
+import org.jooq.tools.json.ParseException;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -80,6 +90,32 @@ public class TestController {
     public String sendSMS() {
         TwilioUtil.sendSMS();
         return "SMS sent to user";
+    }
+
+    @GetMapping("/getCustomerData")
+    public String getCustomer() throws IOException, ParseException {
+        Map<String, Object> result = new HashMap<>();
+        File file = new File("test.json");
+        JSONParser parser = new JSONParser();
+        Object obj = parser.parse(new FileReader(file));
+        JSONArray jsonArray = new JSONArray(obj.toString());
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            Customer customer = new Customer();
+            customer.setName((String) jsonObject.get("name"));
+            customer.setCity((String) jsonObject.get("city"));
+            customer.setJob((String) jsonObject.get("job"));
+            result.put(customer.getName(), customer);
+        }
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonOutput = "";
+        try {
+            jsonOutput = objectMapper.writeValueAsString(result);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return jsonOutput;
     }
 
     private static List<String> getFieldNames(Field[] fields) {
