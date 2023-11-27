@@ -1,24 +1,33 @@
 package com.example.MSSQLConnection.controller;
 
 import com.example.MSSQLConnection.concurrency.Worker;
+import com.example.MSSQLConnection.dto.TokenRequest;
+import com.example.MSSQLConnection.dto.TokenResponse;
 import com.example.MSSQLConnection.model.Customer;
 import com.example.MSSQLConnection.model.Greeting;
 import com.example.MSSQLConnection.util.MemoryMapUtil;
 import com.example.MSSQLConnection.util.TwilioUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import org.jooq.tools.json.JSONParser;
 import org.jooq.tools.json.ParseException;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.http.*;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Field;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
@@ -116,6 +125,42 @@ public class TestController {
             e.printStackTrace();
         }
         return jsonOutput;
+    }
+
+    @GetMapping("/getToken")
+    public Map<String, Object> getToken() throws IOException, InterruptedException, URISyntaxException {
+        Map<String, Object> result = new HashMap<>();
+
+        TokenRequest tokenRequest = new TokenRequest();
+        tokenRequest.setUsername("admin");
+        tokenRequest.setPassword("admin");
+        tokenRequest.setProvider("db");
+        tokenRequest.setRefresh(true);
+
+        Gson gson = new Gson();
+
+        /*RestTemplate restTemplate = new RestTemplate();
+        // restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+        // set headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity = new HttpEntity<>(gson.toJson(tokenRequest), headers);
+
+        URI uri = new URI("http://192.168.10.168:8088/api/v1/security/login");
+        ResponseEntity<TokenResponse> response = restTemplate
+                .exchange(uri, HttpMethod.POST, entity, TokenResponse.class);*/
+
+        HttpClient client = HttpClient.newBuilder().build();
+        HttpRequest httpRequest = HttpRequest.newBuilder()
+                .uri(URI.create("http://192.168.10.168:8088/api/v1/security/login"))
+                .header("Content-Type", "application/JSON")
+                .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(tokenRequest)))
+                .build();
+
+        HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+
+        return result;
     }
 
     private static List<String> getFieldNames(Field[] fields) {
