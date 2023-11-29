@@ -47,7 +47,7 @@ public class TestController {
         List<Thread> workers = Stream
                 .generate(() -> new Thread(new Worker(outputScraper, countDownLatch)))
                 .limit(5)
-                .collect(toList());
+                .toList();
 
         workers.forEach(Thread::start);
         countDownLatch.await();
