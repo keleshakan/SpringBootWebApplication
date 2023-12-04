@@ -53,7 +53,6 @@ public class TestController {
         countDownLatch.await();
         outputScraper.add("Latch released");
 
-
         return Collections.singletonMap("message", "Test is completed!");
     }
 
