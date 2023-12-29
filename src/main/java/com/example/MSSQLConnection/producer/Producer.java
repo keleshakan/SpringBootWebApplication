@@ -14,7 +14,7 @@ public class Producer implements Runnable{
     public void run() {
         //produce messages
         for(int i=0; i<100; i++){
-            Message msg = new Message(""+i);
+            Message msg = new Message("message");
             try {
                 Thread.sleep(i);
                 queue.put(msg);

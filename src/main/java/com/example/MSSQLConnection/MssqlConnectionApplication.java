@@ -26,6 +26,7 @@ import java.util.concurrent.Executor;
 public class MssqlConnectionApplication {
 
 	public static void main(String[] args) {
+
 		//Creating BlockingQueue of size 10
 		BlockingQueue<Message> queue = new ArrayBlockingQueue<>(10);
 		Producer producer = new Producer(queue);
@@ -36,6 +37,7 @@ public class MssqlConnectionApplication {
 		new Thread(consumer).start();
 		System.out.println("Producer and Consumer has been started");
 		SpringApplication.run(MssqlConnectionApplication.class, args);
+
 		/*var applicationContext = new AnnotationConfigApplicationContext(MssqlConnectionApplication.class);
 
 		for (var beanName : applicationContext.getBeanDefinitionNames()){

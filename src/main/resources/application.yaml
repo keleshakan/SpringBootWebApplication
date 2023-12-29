@@ -11,3 +11,10 @@ spring:
       matching-strategy: ant_path_matcher
 server:
   port: 8081
+
+app:
+  security:
+    cors:
+      allowed-hosts:
+        - http://localhost:3000
+        - http://localhost:3001
