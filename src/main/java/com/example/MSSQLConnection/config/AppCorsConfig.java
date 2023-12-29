@@ -22,15 +22,15 @@ public class AppCorsConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(AppCorsConfig.class);
 
     @Autowired
-    private AllowedHost csatAllowedHosts;
+    private AllowedHost appAllowedHosts;
 
     @Bean
     public CorsFilter corsFilter() {
-        this.csatAllowedHosts.getAllowedHosts()
+        this.appAllowedHosts.getAllowedHosts()
                 .forEach(h -> LOGGER.info("app::security::cors::allowed-host: {}", h));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(this.csatAllowedHosts.getAllowedHosts());
+        config.setAllowedOrigins(this.appAllowedHosts.getAllowedHosts());
         config.setAllowedHeaders(Collections.singletonList("*"));
         config.setAllowedMethods(Collections.singletonList("*"));
         config.setExposedHeaders(Arrays.asList("Authorization", "Link", "X-Total-Count"));
